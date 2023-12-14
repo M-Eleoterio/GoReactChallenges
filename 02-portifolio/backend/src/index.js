@@ -85,5 +85,25 @@ app.put("/repositories/:id/like", (req, res) => {
 
 });
 
+app.put("/repositories/:id/deslike", (req, res) => {
+    const { id } = req.params
+
+    const repoIndex = repositories.findIndex(repository => repository.id === id)
+
+    if (repoIndex < 0 ) {
+        return res.status(404).json({ error: "Repository not found"})
+    }
+
+    const repository = {
+        ...repositories[repoIndex],
+        likes: repositories[repoIndex].likes - 1
+    }
+
+    repositories[repoIndex] = repository
+
+    return res.json(repository)
+
+});
+
 app.listen(3333);
 console.log(`🚀Back-end Started (●'◡'●)`);
