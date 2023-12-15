@@ -1,5 +1,12 @@
 import React, { useEffect, useState } from "react";
 import api from "../services/Api";
+import "./repositories.css";
+
+//ICONS
+import { GrLike } from "react-icons/gr";
+import { GrDislike } from "react-icons/gr";
+import { MdOutlineDelete } from "react-icons/md";
+//
 
 function Repository() {
   const [repos, setRepos] = useState([]);
@@ -28,7 +35,6 @@ function Repository() {
     api.post("/repositories", newRepo).then((res) => {
       let newArray = [...repos, res.data];
       setRepos(newArray);
-      
     });
   }
 
@@ -63,57 +69,71 @@ function Repository() {
 
   return (
     <div className="Repository">
-      {repos.map((repo, index) => {
-        localStorage.setItem(`likeState${index}`, "like")
-        const likeState = localStorage.getItem(`likeState${index}`);
-
-        return (
-          <ul key={repo.id}>
-            <li>Titulo: {repo.title}</li>
-            <li>
-              URL:{" "}
-              <a target="_blank" rel="noreferrer" href={repo.url}>
-                {repo.url}
-              </a>
-            </li>
-            <li>Likes: {repo.likes}</li>
-            <button
-              id={"likeBtn" + index}
-              onClick={(event) => {
-                handleLikeEvent(repo.id, event);
-
-              }}
-            >
-              Like
-            </button>
-            <button
-              id={"deslikeBtn" + index}
-              onClick={(event) => {
-                handleDeslikeEvent(repo.id, event);
-
-              }}
-            >
-              Deslike
-            </button>
-
-            <button onClick={(event) => handleDeleteEvent(repo.id, event)}>
-              Deletar
-            </button>
-          </ul>
-        );
-      })}
+      <div className="repos">
+        {repos.map((repo, index) => {
+          localStorage.setItem(`likeState${index}`, "like");
+          const likeState = localStorage.getItem(`likeState${index}`);
+          return (
+            <div className="repo" key={repo.id}>
+              <ul>
+                <a target="_blank" rel="noreferrer" href={repo.url}>
+                  <img
+                    src="https://cdn-icons-png.flaticon.com/512/25/25231.png"
+                    alt=""
+                  />
+                </a>
+                <li>Titulo: {repo.title}</li>
+                <li>
+                  URL:{" "}
+                  <a target="_blank" rel="noreferrer" href={repo.url}>
+                    {repo.url}
+                  </a>
+                </li>
+                <div className="btns">
+                  <button
+                    id={"likeBtn" + index}
+                    className="likeBtn Btn"
+                    onClick={(event) => {
+                      handleLikeEvent(repo.id, event);
+                    }}
+                  >
+                    <GrLike className="btnIcon" /> {repo.likes}
+                  </button>
+                  <button
+                    id={"deslikeBtn" + index}
+                    className="deslikeBtn Btn"
+                    onClick={(event) => {
+                      handleDeslikeEvent(repo.id, event);
+                    }}
+                  >
+                    <GrDislike className="btnIcon" />
+                  </button>
+                  <button
+                    onClick={(event) => handleDeleteEvent(repo.id, event)}
+                    className="deleteBtn Btn"
+                  >
+                    <MdOutlineDelete className="btnIcon" />
+                  </button>
+                </div>
+              </ul>
+            </div>
+          );
+        })}
+      </div>
 
       <hr />
 
-      <h2>Adicionar repositório</h2>
-      <label htmlFor="repoTitle">Titulo:</label>
-      <input type="text" name="" id="repoTitle" />
-      <br />
-      <br />
-      <label htmlFor="repoURL">URL:</label>
-      <input type="text" name="" id="repoURL" />
-      <br />
-      <button onClick={handleSubmitEvent}>Criar</button>
+      <div className="form">
+        <h2>Adicionar repositório</h2>
+        <label style={{marginTop: '20px'}} htmlFor="repoTitle">Titulo: </label>
+        <input type="text" name="" className="repoInput" id="repoTitle" />
+        <br />
+        <br />
+        <label style={{marginTop: '20px'}} htmlFor="repoURL">URL:</label>
+        <input type="text" name="" className="repoInput" id="repoURL"  />
+        <br />
+        <button className="Btn" style={{marginTop: '20px'}} onClick={handleSubmitEvent}>Criar</button>
+      </div>
     </div>
   );
 }
